@@ -4,11 +4,10 @@ from sensor_app.core.models import Sensor
 from sensor_app.core.services import SensorService
 from sensor_app.adapters.db_adapter import AsyncpgSensorRepository
 
-DATABASE_URL = "postgresql://user:password@localhost/test_db"
-
 @pytest.fixture
-async def sensor_service():
-    repository = AsyncpgSensorRepository(DATABASE_URL)
+async def sensor_service(database_url):
+    import pdb; pdb.set_trace()
+    repository = AsyncpgSensorRepository(database_url)
     return SensorService(repository)
 
 @pytest.mark.asyncio
