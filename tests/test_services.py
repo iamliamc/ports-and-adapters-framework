@@ -5,8 +5,7 @@ from sensor_app.core.services import SensorService
 from sensor_app.adapters.db_adapter import AsyncpgSensorRepository
 
 @pytest.fixture
-async def sensor_service(database_url):
-    import pdb; pdb.set_trace()
+def sensor_service(database_url):
     repository = AsyncpgSensorRepository(database_url)
     return SensorService(repository)
 

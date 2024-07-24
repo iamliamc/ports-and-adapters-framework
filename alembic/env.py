@@ -1,5 +1,6 @@
 import os
 from logging.config import fileConfig
+import logging
 
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool
@@ -14,7 +15,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sensor_app.adapters.models.base import Base
 
 # Load environment variables from .env file
-load_dotenv()
+load_dotenv(override=True)
 
 
 # Import your models here
@@ -40,8 +41,11 @@ target_metadata = Base.metadata
 # my_important_option = config.get_main_option("my_important_option")
 # ... etc.
 
+logger = logging.getLogger(__name__)
 # Override the SQLAlchemy URL with the one from the .env file
+
 database_url = os.getenv('DATABASE_URL')
+logger.info(f"Using {database_url}")
 if not database_url:
     raise ValueError("No DATABASE_URL set for Alembic configuration")
 
