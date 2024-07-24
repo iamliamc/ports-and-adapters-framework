@@ -8,46 +8,57 @@ import dotenv
 from dotenv import load_dotenv
 from alembic.config import Config
 from alembic import command
+from alembic.script import ScriptDirectory
+from alembic.runtime import migration
+from sqlalchemy import create_engine
+
+load_dotenv(override=True)
+
 
 @pytest.fixture(scope="session")
 def test_logger():
-    # Set up logging
-    logging.basicConfig(level=logging.DEBUG)
-    logger = logging.getLogger(__name__)
+    logger = logging.getLogger()
+    logging.getLogger("asyncio").setLevel(logging.WARNING)
     return logger
 
 
-@pytest.fixture(scope='session')
-def database_url():
+@pytest.fixture(scope="session")
+def database_url(test_logger):
     # Load environment variables from .env file
-    load_dotenv()
-    db_url = os.getenv('TEST_DATABASE_URL')
+    db_url = os.getenv("TEST_DATABASE_URL")
     if not db_url:
         raise ValueError("No TEST_DATABASE_URL set for pytest configuration")
-    print(db_url)
+    test_logger.debug(db_url)
     return db_url
 
+
 async def truncate_all_tables():
-        # List all table names in the database
-    conn = await asyncpg.connect(os.getenv('TEST_DATABASE_URL'))
-    try: 
-        tables = await conn.fetch("""
+    # List all table names in the database
+    conn = await asyncpg.connect(os.getenv("TEST_DATABASE_URL"))
+    try:
+        tables = await conn.fetch(
+            """
             SELECT table_name
             FROM information_schema.tables
             WHERE table_schema = 'public'
-        """)
-        
-        table_names = [table['table_name'] for table in tables]
+        """
+        )
+
+        table_names = [table["table_name"] for table in tables]
+        table_names.remove("alembic_version")
 
         # Generate TRUNCATE TABLE commands for all tables
         if table_names:
-            truncate_commands = [f'TRUNCATE TABLE {table_name} CASCADE;' for table_name in table_names]
-            truncate_query = ' '.join(truncate_commands)
+            truncate_commands = [
+                f"TRUNCATE TABLE {table_name} CASCADE;" for table_name in table_names
+            ]
+            truncate_query = " ".join(truncate_commands)
             await conn.execute(truncate_query)
     finally:
         await conn.close()
 
-@pytest_asyncio.fixture(scope='function')
+
+@pytest_asyncio.fixture(scope="function")
 async def db_connection(database_url):
     conn = await asyncpg.connect(database_url)
     try:
@@ -55,18 +66,41 @@ async def db_connection(database_url):
     finally:
         await conn.close()
 
-@pytest_asyncio.fixture(scope='session', autouse=True)
+
+@pytest_asyncio.fixture(scope="session", autouse=True)
 def run_migrations(database_url, test_logger):
     """Run Alembic migrations before any tests are run."""
     alembic_cfg = Config("alembic.ini")  # Path to your alembic configuration file
-    alembic_cfg.set_main_option('sqlalchemy.url', database_url)
-    try:
-        command.upgrade(alembic_cfg, "head")
-    except Exception as e:
-        test_logger.error(e)
+    alembic_cfg.set_main_option("sqlalchemy.url", database_url)
+
+    # Get the Alembic script directory
+    script_directory = ScriptDirectory.from_config(alembic_cfg)
+
+    # Create an SQLAlchemy engine
+    engine = create_engine(database_url)
+
+    # Get the current revision in the database
+    with engine.connect() as connection:
+        context = migration.MigrationContext.configure(connection)
+        current_revision = context.get_current_revision()
+
+    # Get the latest revision (HEAD) from the script directory
+    head_revision = script_directory.get_current_head()
+
+    if current_revision != head_revision:
+        test_logger.info(
+            f"Running migrations from {current_revision} to {head_revision}"
+        )
+        try:
+            command.upgrade(alembic_cfg, "head")
+        except Exception as e:
+            test_logger.error(f"Failed attempt to run migrations: {e}")
+            raise
+    else:
+        test_logger.info("Already at HEAD. No migration needed.")
 
 
-@pytest_asyncio.fixture(scope='function', autouse=True)
+@pytest_asyncio.fixture(scope="function", autouse=True)
 async def clean_db():
     await truncate_all_tables()
 

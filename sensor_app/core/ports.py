@@ -1,6 +1,7 @@
 from typing import Protocol, List
 from sensor_app.core.models import Sensor
 
+
 class SensorRepository(Protocol):
     async def create_sensor(self, sensor: Sensor) -> Sensor:
         pass

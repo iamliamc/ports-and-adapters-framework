@@ -2,6 +2,7 @@ from typing import List
 from sensor_app.core.models import Sensor
 from sensor_app.core.ports import SensorRepository
 
+
 class SensorService:
     def __init__(self, repository: SensorRepository):
         self.repository = repository
