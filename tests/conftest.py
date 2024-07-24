@@ -12,6 +12,10 @@ from tests.integration import settings
 
 test_settings = settings.load()
 
+@pytest.fixture(scope='session')
+def conftest_settings(): 
+    return test_settings
+
 @pytest.fixture(scope="session")
 def test_logger():
     logger = logging.getLogger()

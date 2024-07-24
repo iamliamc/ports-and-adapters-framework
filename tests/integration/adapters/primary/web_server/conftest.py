@@ -1,13 +1,13 @@
 import pytest
 from fastapi.testclient import TestClient
 from sensor_app.main import app
-
+from sensor_app.adapters.primary.web_server.fast_api_app import create_fastapi_app
+from sensor_app.adapters.secondary.persistence_sql.sensor_repo import AsyncpgSensorRepository
 
 @pytest.fixture
-def test_client(test_app):
-    return TestClient(test_app)
+def test_sensor_repo(conftest_settings):
+    return AsyncpgSensorRepository(conftest_settings.database.connection)
 
-def test_get_users(test_client, test_users):
-    response = test_client.get("/users")
-    assert response.status_code == 200
-    assert len(response.json()) == len(test_users)
+@pytest.fixture
+def test_app(conftest_settings, test_sensor_repo):
+    return create_fastapi_app(web_server_settings=conftest_settings.web_server_settings, sensor_repo=test_sensor_repo)

@@ -3,3 +3,8 @@
 # file or your local db you want to use for testing
 database:
   connection: "postgresql://test_user:test_password@localhost:5433/test_db"
+
+web_server:
+  port: 8080
+  host: 0.0.0.0 
+  swagger_relative_path: "/"
