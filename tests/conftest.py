@@ -1,19 +1,16 @@
-import os
 import logging
-import asyncio
 import pytest
 import pytest_asyncio
 import asyncpg
-import dotenv
-from dotenv import load_dotenv
 from alembic.config import Config
 from alembic import command
 from alembic.script import ScriptDirectory
 from alembic.runtime import migration
 from sqlalchemy import create_engine
 
-load_dotenv(override=True)
+from tests.integration import settings
 
+test_settings = settings.load()
 
 @pytest.fixture(scope="session")
 def test_logger():
@@ -25,16 +22,16 @@ def test_logger():
 @pytest.fixture(scope="session")
 def database_url(test_logger):
     # Load environment variables from .env file
-    db_url = os.getenv("TEST_DATABASE_URL")
+    db_url = test_settings.database.connection
     if not db_url:
-        raise ValueError("No TEST_DATABASE_URL set for pytest configuration")
+        raise ValueError("No test_settings.database.connection set for pytest configuration need to update tests/test_settings.yaml")
     test_logger.debug(db_url)
     return db_url
 
 
 async def truncate_all_tables():
     # List all table names in the database
-    conn = await asyncpg.connect(os.getenv("TEST_DATABASE_URL"))
+    conn = await asyncpg.connect(test_settings.database.connection)
     try:
         tables = await conn.fetch(
             """

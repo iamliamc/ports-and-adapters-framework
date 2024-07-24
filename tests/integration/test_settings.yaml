@@ -1,0 +1,5 @@
+# use to overwrite defaults provided in settings
+# make sure these variables match either the docker-compose env vars
+# file or your local db you want to use for testing
+database:
+  connection: "postgresql://test_user:test_password@localhost:5433/test_db"

@@ -1,4 +1,3 @@
-import os
 from logging.config import fileConfig
 import logging
 
@@ -7,16 +6,12 @@ from sqlalchemy import pool
 
 from alembic import context
 
-from dotenv import load_dotenv
+from sensor_app import settings
 
 # from sqlalchemy.ext.declarative import DeclarativeMeta
 # from sqlalchemy.ext.declarative import declarative_base
 
 from sensor_app.adapters.secondary.persistence_sql.models.base import Base
-
-# Load environment variables from .env file
-load_dotenv(override=True)
-
 
 # TODO is this necessary?
 # Import your models here
@@ -45,10 +40,13 @@ target_metadata = Base.metadata
 logger = logging.getLogger(__name__)
 # Override the SQLAlchemy URL with the one from the .env file
 
-database_url = os.getenv('DATABASE_URL')
+app_settings = settings.load("./sensor_app/settings.yaml")
+
+
+database_url = app_settings.database.connection
 logger.info(f"Using {database_url}")
 if not database_url:
-    raise ValueError("No DATABASE_URL set for Alembic configuration")
+    raise ValueError("No database url in settings.database.connection set for Alembic configuration see settings.yaml")
 
 config.set_main_option('sqlalchemy.url', database_url)
 
