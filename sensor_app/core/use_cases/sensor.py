@@ -10,5 +10,14 @@ class ListSensors(UseCase):
         self.repo = sensor_repo
 
     async def __call__(self) -> List[Sensor]:
-        await self.repo.list_sensors()
+        return await self.repo.list_sensors()
         
+
+class CreateSensor(UseCase):
+    def __init__(
+            self, sensor_repo: SensorRepository
+    ):
+        self.repo = sensor_repo
+
+    async def __call__(self, sensor: Sensor) -> Sensor:
+        return await self.repo.create_sensor(sensor)

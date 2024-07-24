@@ -1,5 +1,5 @@
 from sqlalchemy import Column, Integer, String, Float
-from sensor_app.adapters.secondary.persistence_sql.models import Base
+from sensor_app.adapters.secondary.persistence_sql.models.base import Base
 
 
 class Sensor(Base):
