@@ -1,0 +1,24 @@
+running:
+  run_fast_api: true
+
+  # prod/test  -> local_development: false
+  local_development: true
+  # prod/test  -> debug: false
+  debug: true
+
+config:
+  # generic config
+  log_level: "INFO"
+  sentry_url: "https://{your_project_hash}@sentry.com/{project_id}?verify_ssl=0"
+
+database:
+  # backoffice db connection
+  connection: "postgres://postgres:password@localhost/back_office"
+
+web_server:
+  port: 8080
+  host: 0.0.0.0 # Necessary for MacOS/docker running
+  # prod  -> do not include swagger_relative_path since we don't want swagger on production
+  # test  -> swagger_relative_path: "/api/v1"
+  # cpu_cores: 2 # Set this if we want to manually set the cores
+  swagger_relative_path: "/"

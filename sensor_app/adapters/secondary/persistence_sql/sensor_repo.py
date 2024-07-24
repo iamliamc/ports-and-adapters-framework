@@ -1,7 +1,7 @@
 import asyncpg
 from typing import List
-from sensor_app.core.models import Sensor
-from sensor_app.core.ports import SensorRepository
+from sensor_app.core.domain.entities import Sensor
+from sensor_app.core.ports.secondary import SensorRepository
 
 
 class AsyncpgSensorRepository(SensorRepository):

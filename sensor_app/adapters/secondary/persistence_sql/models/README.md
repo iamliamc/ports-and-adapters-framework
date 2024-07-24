@@ -1,0 +1,1 @@
+We could skip this entire step if we choose to not use ORM models to create our migrations we could write them manually. 

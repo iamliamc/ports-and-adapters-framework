@@ -9,17 +9,18 @@ from alembic import context
 
 from dotenv import load_dotenv
 
-from sqlalchemy.ext.declarative import DeclarativeMeta
-from sqlalchemy.ext.declarative import declarative_base
+# from sqlalchemy.ext.declarative import DeclarativeMeta
+# from sqlalchemy.ext.declarative import declarative_base
 
-from sensor_app.adapters.models.base import Base
+from sensor_app.adapters.secondary.persistence_sql.models.base import Base
 
 # Load environment variables from .env file
 load_dotenv(override=True)
 
 
+# TODO is this necessary?
 # Import your models here
-from sensor_app.adapters.models.sensor import Sensor
+from sensor_app.adapters.secondary.persistence_sql.models.sensor import Sensor
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

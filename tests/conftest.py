@@ -47,7 +47,7 @@ async def truncate_all_tables():
         table_names = [table["table_name"] for table in tables]
         table_names.remove("alembic_version")
 
-        # Generate TRUNCATE TABLE commands for all tables
+        # Generate TRUNCATE TABLE commands for all data tables
         if table_names:
             truncate_commands = [
                 f"TRUNCATE TABLE {table_name} CASCADE;" for table_name in table_names

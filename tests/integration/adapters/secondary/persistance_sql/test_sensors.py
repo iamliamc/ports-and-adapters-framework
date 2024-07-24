@@ -1,15 +1,12 @@
 import pytest
 import asyncio
-from sensor_app.core.models import Sensor
-from sensor_app.core.services import SensorService
-from sensor_app.adapters.db_adapter import AsyncpgSensorRepository
+from sensor_app.core.domain.entities import Sensor
+from sensor_app.adapters.secondary.persistence_sql.sensor_repo import AsyncpgSensorRepository
 
 
 @pytest.fixture
 def sensor_service(database_url):
-    repository = AsyncpgSensorRepository(database_url)
-    return SensorService(repository)
-
+    return AsyncpgSensorRepository(database_url)
 
 @pytest.mark.asyncio
 async def test_create_sensor(sensor_service, test_logger):

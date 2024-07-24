@@ -1,5 +1,5 @@
 from typing import Protocol, List
-from sensor_app.core.models import Sensor
+from sensor_app.core.domain.entities import Sensor
 
 
 class SensorRepository(Protocol):

@@ -1,0 +1,20 @@
+running:
+  run_web_server: true
+
+  # prod/test  -> local_development: false
+  local_development: true
+  # prod/test  -> debug: false
+  debug: true
+
+config:
+  # generic config
+  log_level: "INFO"
+  sentry_url: "https://{your_project_hash}@sentry.com/{project_id}?verify_ssl=0"
+
+database:
+  connection: "postgresql://dev_user:dev_password@localhost:5432/dev_db"
+
+web_server:
+  port: 8080
+  host: 0.0.0.0 
+  swagger_relative_path: "/"

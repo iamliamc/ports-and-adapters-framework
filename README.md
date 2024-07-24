@@ -36,3 +36,6 @@ Do we want Alembic create migrations based on ORM models?
     alembic revision --autogenerate -m "create sensors table"
     alembic upgrade head
 ```
+
+Run the application
+`uvicorn sensor_app.main:app --reload`
