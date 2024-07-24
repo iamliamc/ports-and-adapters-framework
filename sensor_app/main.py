@@ -2,10 +2,9 @@
 import logging
 from sensor_app import settings
 import sensor_app.adapters.secondary.persistence_sql as ps
-from sensor_app.core.use_cases import (
-    sensor as sensor_use_case
-)
+from sensor_app.core.use_cases import sensor as sensor_use_case
 from sensor_app.adapters.primary.web_server.fast_api_app import create_fastapi_app
+
 
 def serve():
     try:
@@ -13,7 +12,9 @@ def serve():
             # REST server
             app = create_fastapi_app(
                 web_server_settings=app_settings.web_server,
-                sensor_repo=ps.AsyncpgSensorRepository(app_settings.database.connection)
+                sensor_repo=ps.AsyncpgSensorRepository(
+                    app_settings.database.connection
+                ),
             )
             return app
 
@@ -24,8 +25,8 @@ def serve():
 app_settings = settings.load("./sensor_app/settings.yaml")
 
 if (
-        app_settings.config.sentry_url
-        and app_settings.running.local_development is not True
+    app_settings.config.sentry_url
+    and app_settings.running.local_development is not True
 ):
     # TODO configure observability
     None

@@ -12,9 +12,11 @@ from tests.integration import settings
 
 test_settings = settings.load()
 
-@pytest.fixture(scope='session')
-def conftest_settings(): 
+
+@pytest.fixture(scope="session")
+def conftest_settings():
     return test_settings
+
 
 @pytest.fixture(scope="session")
 def test_logger():
@@ -28,7 +30,9 @@ def database_url(test_logger):
     # Load environment variables from .env file
     db_url = test_settings.database.connection
     if not db_url:
-        raise ValueError("No test_settings.database.connection set for pytest configuration need to update tests/test_settings.yaml")
+        raise ValueError(
+            "No test_settings.database.connection set for pytest configuration need to update tests/test_settings.yaml"
+        )
     test_logger.debug(db_url)
     return db_url
 
