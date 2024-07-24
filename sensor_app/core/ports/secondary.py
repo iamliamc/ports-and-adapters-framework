@@ -1,4 +1,4 @@
-from typing import Protocol, List
+from typing import Protocol, List, Optional
 from sensor_app.core.domain.entities import Sensor
 
 
@@ -6,7 +6,7 @@ class SensorRepository(Protocol):
     async def create_sensor(self, sensor: Sensor) -> Sensor:
         pass
 
-    async def get_sensor(self, sensor_id: int) -> Sensor:
+    async def get_sensor(self, sensor_id: int) -> Optional[Sensor]:
         pass
 
     async def update_sensor(self, sensor: Sensor) -> Sensor:

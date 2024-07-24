@@ -39,3 +39,8 @@ Do we want Alembic create migrations based on ORM models?
 
 Run the application
 `uvicorn sensor_app.main:app --reload`
+
+Some type checking:
+
+`mypy sensor_app`
+```Success: no issues found in 20 source files```

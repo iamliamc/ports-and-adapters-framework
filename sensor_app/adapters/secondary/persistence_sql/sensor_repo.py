@@ -1,5 +1,5 @@
-import asyncpg
-from typing import List
+import asyncpg # type: ignore
+from typing import List, Optional
 from sensor_app.core.domain.entities import Sensor
 from sensor_app.core.ports.secondary import SensorRepository
 
@@ -8,7 +8,7 @@ class AsyncpgSensorRepository(SensorRepository):
     def __init__(self, database_url: str):
         self.database_url = database_url
 
-    async def _get_connection(self):
+    async def _get_connection(self) -> asyncpg.Connection:
         return await asyncpg.connect(self.database_url)
 
     async def create_sensor(self, sensor: Sensor) -> Sensor:
@@ -22,7 +22,7 @@ class AsyncpgSensorRepository(SensorRepository):
         await conn.close()
         return Sensor(**row)
 
-    async def get_sensor(self, sensor_id: int) -> Sensor:
+    async def get_sensor(self, sensor_id: int) -> Optional[Sensor]:
         conn = await self._get_connection()
         row = await conn.fetchrow(
             "SELECT id, name, value FROM sensors WHERE id = $1", sensor_id
