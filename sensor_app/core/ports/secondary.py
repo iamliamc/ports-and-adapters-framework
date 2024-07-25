@@ -1,6 +1,9 @@
 from typing import Protocol, List, Optional
 from sensor_app.core.domain.entities import Sensor
 
+class BackgroundJobsRepository(Protocol):
+    def send_task(self, task_name: str, *args, **kwargs) -> None:
+        pass
 
 class SensorRepository(Protocol):
     async def create_sensor(self, sensor: Sensor) -> Sensor:

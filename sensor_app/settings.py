@@ -1,19 +1,40 @@
 import yaml
 import logging
 import re
+from typing import Optional
 
 
 class RunningSettings:
     def __init__(
         self,
-        run_web_server=True,
-        local_development=False,
-        debug=False,
+        run_web_server: bool = True,
+        run_background_jobs: bool = True,
+        local_development: bool = False,
+        debug: bool = False,
     ):
         self.run_web_server = run_web_server
+        self.run_background_jobs = run_background_jobs
         self.local_development = local_development
         self.debug = debug
 
+class BackgroundJobsSettings:
+    def __init__(
+        self,
+        name: str,
+        broker: str,
+        backend: str,
+        task_always_eager: bool,
+        task_eager_propagates: bool,
+        result_backend: Optional[str] = None,
+        cache_backend: Optional[str] = None
+    ):
+        self.name = name
+        self.broker = broker
+        self.backend = backend
+        self.task_always_eager = task_always_eager
+        self.task_eager_propagates = task_eager_propagates
+        self.result_backend = result_backend
+        self.cache_backend = cache_backend
 
 class ConfigSettings:
     def __init__(
@@ -54,6 +75,7 @@ class Settings:
         self.config = ConfigSettings(**settings.get("config", {}))
         self.database = DatabaseSettings(**settings.get("database", {}))
         self.web_server = WebServerSettings(**settings.get("web_server", {}))
+        self.background_jobs = BackgroundJobsSettings(**settings.get("background_jobs", {}))
 
 
 def load(path):

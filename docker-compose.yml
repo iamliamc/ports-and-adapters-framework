@@ -23,17 +23,11 @@ services:
     volumes:
       - postgres_test_data:/var/lib/postgresql/data
 
-  alembic:
-    image: python:3.9
-    volumes:
-      - .:/app
-    working_dir: /app
-    depends_on:
-      - postgres_dev
-      - postgres_test
-    command: >
-      sh -c "pip install -r requirements.txt &&
-             alembic upgrade head"
+  # For use with Celery
+  redis:
+    image: redis:6
+    ports:
+      - "6379:6379"
 
 volumes:
   postgres_dev_data:
