@@ -62,3 +62,13 @@ http://localhost:8000/docs
  public | taskset_id_sequence | sequence | dev_user
 
  ```
+
+
+ ### Flower: 
+ Visit it at http://0.0.0.0:5555
+
+```
+ FastAPI background tasks are a good fit for lightweight applications that need to perform simple background tasks, such as logging or updating a database. They are simple to set up and integrate seamlessly with FastAPI web applications, making them a good choice for developers who want a simple and lightweight solution.
+
+On the other hand, Celery is a good choice for more complex applications that need to handle a large volume of tasks, or require more advanced scheduling features. Celery’s distributed architecture allows it to handle large volumes of tasks, and its Celery Beat scheduling functionality makes it a powerful tool for scheduling periodic tasks.
+```

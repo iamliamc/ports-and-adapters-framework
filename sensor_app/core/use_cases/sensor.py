@@ -32,10 +32,19 @@ class MakeOneThousandSensors(UseCase):
     async def __call__(self, count: int = 100000) -> List[Sensor]:
         sensors = []
         for i in range(0, count):
+            if i % 1001:
+                raise KeyError('hi')
             sensors.append(await self.sensor_repo.create_sensor(Sensor(name=f"Sensor {i}", value=i)))
             
         return sensors
-    
+
+class RetryBackgroundTaskById(UseCase):
+    def __init__(self, background_jobs_repo: BackgroundJobsRepository):
+        self.background_jobs_repo = background_jobs_repo
+
+    async def __call__(self, task_id: str):
+        results = self.background_jobs_repo.retry_task(task_id)
+        return results
 
 class BackgroundMakeOneThousandSensors(UseCase):
     def __init__(self, background_jobs_repo: BackgroundJobsRepository):

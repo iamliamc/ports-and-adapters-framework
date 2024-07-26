@@ -25,18 +25,26 @@ class BackgroundJobsSettings:
         backend: str,
         task_always_eager: bool,
         task_eager_propagates: bool,
+        admin_dashboard_user: str = '',
+        admin_dashboard_user_password: str = '',
         result_backend: Optional[str] = None,
         cache_backend: Optional[str] = None,
-        broker_connection_retry_on_startup: bool = True
+        broker_connection_retry_on_startup: bool = True,
+        task_track_started: bool = True,
+        task_send_sent_event: bool = True
     ):
         self.name = name
         self.broker = broker
         self.backend = backend
         self.task_always_eager = task_always_eager
         self.task_eager_propagates = task_eager_propagates
+        self.admin_dashboard_user = admin_dashboard_user
+        self.admin_dashboard_user_password = admin_dashboard_user_password
         self.result_backend = result_backend
         self.cache_backend = cache_backend
         self.broker_connection_retry_on_startup = broker_connection_retry_on_startup
+        self.task_track_started = task_track_started
+        self.task_send_sent_event = task_send_sent_event
 
 class ConfigSettings:
     def __init__(

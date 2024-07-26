@@ -1,6 +1,7 @@
 # setup
 import logging
 from celery import Celery
+from flower.app import Flower
 from sensor_app import settings
 import sensor_app.adapters.secondary.persistence_sql as ps
 import sensor_app.adapters.secondary.background_jobs_celery as bjc
@@ -34,7 +35,7 @@ def start_background_worker() -> Celery:
             )
             return app
     except Exception as e:
-        logger.exception(e)
+        logger.exception(e)       
 
 app_settings = settings.load("./sensor_app/settings.yaml")
 

@@ -1,8 +1,12 @@
 from typing import Protocol, List, Optional
 from sensor_app.core.domain.entities import Sensor
+from sensor_app.core.domain.results import AsyncResult
 
 class BackgroundJobsRepository(Protocol):
-    def send_task(self, task_name: str, *args, **kwargs) -> None:
+    def send_task(self, task_name: str, *args, **kwargs) -> AsyncResult:
+        pass
+
+    def retry_task(self, task_id: str) -> AsyncResult:
         pass
 
 class SensorRepository(Protocol):

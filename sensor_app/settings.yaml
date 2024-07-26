@@ -26,3 +26,5 @@ background_jobs:
   backend: "db+postgresql://dev_user:dev_password@localhost:5432/dev_db"
   task_always_eager: false
   task_eager_propagates: false
+  admin_dashboard_user: "user"
+  admin_dashboard_user_password: "password"
