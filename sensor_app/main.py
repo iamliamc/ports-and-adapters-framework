@@ -26,7 +26,12 @@ def serve():
 def start_background_worker() -> Celery:
     try: 
         if app_settings.running.run_background_jobs is True:
-            app = create_celery_app(app_settings.background_jobs)
+            app = create_celery_app(
+                background_job_settings=app_settings.background_jobs,
+                sensor_repo=ps.AsyncpgSensorRepository(
+                    app_settings.database.connection
+                )
+            )
             return app
     except Exception as e:
         logger.exception(e)
@@ -51,5 +56,5 @@ logger.addHandler(ch)
 logger.setLevel(app_settings.config.log_level)
 
 settings.log_config(app_settings, logger)
-app = serve()
 background_worker = start_background_worker()
+app = serve()

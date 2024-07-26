@@ -10,6 +10,15 @@ class AsyncpgSensorRepository(SensorRepository):
 
     async def _get_connection(self) -> asyncpg.Connection:
         return await asyncpg.connect(self.database_url)
+    
+    async def count_sensors(self) -> int: 
+        conn = await self._get_connection()
+        async with conn.transaction():
+            row = await conn.fetchrow(
+                "SELECT COUNT(*) from sensors",
+            )
+        await conn.close()
+        return row
 
     async def create_sensor(self, sensor: Sensor) -> Sensor:
         conn = await self._get_connection()

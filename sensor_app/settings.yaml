@@ -20,10 +20,9 @@ web_server:
   host: 0.0.0.0 
   swagger_relative_path: "/"
 
-background_jobs: 
-  name: "BackgroundJobsCelery"
-  broker: "memory://"
-  backend: "rpc://"
-  task_always_eager: true
-  task_eager_propagates: true
-  result_backend: "rpc://"
+background_jobs:
+  name: "sensor_app"
+  broker: "redis://localhost:6379/0"
+  backend: "db+postgresql://dev_user:dev_password@localhost:5432/dev_db"
+  task_always_eager: false
+  task_eager_propagates: false

@@ -44,3 +44,21 @@ Some type checking:
 
 `mypy sensor_app`
 ```Success: no issues found in 20 source files```
+
+### Swagger Documentation: 
+http://localhost:8000/docs
+
+### With Celery connected to postgres it creates these tables need to make tests work... 
+```
+                 List of relations
+ Schema |        Name         |   Type   |  Owner
+--------+---------------------+----------+----------
+ public | alembic_version     | table    | dev_user
+ public | celery_taskmeta     | table    | dev_user
+ public | celery_tasksetmeta  | table    | dev_user
+ public | sensors             | table    | dev_user
+ public | sensors_id_seq      | sequence | dev_user
+ public | task_id_sequence    | sequence | dev_user
+ public | taskset_id_sequence | sequence | dev_user
+
+ ```

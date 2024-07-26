@@ -6,6 +6,9 @@ class BackgroundJobsRepository(Protocol):
         pass
 
 class SensorRepository(Protocol):
+    async def count_sensors(self) -> int:
+        pass
+
     async def create_sensor(self, sensor: Sensor) -> Sensor:
         pass
 

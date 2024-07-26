@@ -26,7 +26,8 @@ class BackgroundJobsSettings:
         task_always_eager: bool,
         task_eager_propagates: bool,
         result_backend: Optional[str] = None,
-        cache_backend: Optional[str] = None
+        cache_backend: Optional[str] = None,
+        broker_connection_retry_on_startup: bool = True
     ):
         self.name = name
         self.broker = broker
@@ -35,6 +36,7 @@ class BackgroundJobsSettings:
         self.task_eager_propagates = task_eager_propagates
         self.result_backend = result_backend
         self.cache_backend = cache_backend
+        self.broker_connection_retry_on_startup = broker_connection_retry_on_startup
 
 class ConfigSettings:
     def __init__(
