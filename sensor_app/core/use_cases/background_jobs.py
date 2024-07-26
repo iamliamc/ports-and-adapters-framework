@@ -2,7 +2,7 @@ import logging
 from typing import List
 from sensor_app.core.ports.primary import UseCase
 from sensor_app.core.ports.secondary import BackgroundJobsRepository
-from sensor_app.core.domain.entities import Sensor
+from sensor_app.core.domain.results import AsyncResult
 
 logger = logging.getLogger()
 
@@ -25,15 +25,15 @@ class GetBackgroundTaskResultsById(UseCase):
         return results
 
 
-class BackgroundMakeOneThousandSensors(UseCase):
+class StartBackgroundTask(UseCase):
     def __init__(self, background_jobs_repo: BackgroundJobsRepository):
         self.background_jobs_repo = background_jobs_repo
 
-    async def __call__(self) -> List[Sensor]:
-        logger.info("Starting the background task to make one thousand sensors.")
+    async def __call__(self, task_name: str) -> AsyncResult:
+        logger.info(f"Starting the background task {task_name}.")
         try:
-            results = self.background_jobs_repo.send_task("make_one_thousand_sensors")
-            logger.info("Background task completed successfully.")
+            results = self.background_jobs_repo.send_task(task_name=task_name)
+            logger.info(f"Background task {task_name} entered queue successfully.")
             return results
         except Exception as e:
             logger.error(f"An error occurred while running the background task: {e}")

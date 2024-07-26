@@ -10,7 +10,7 @@ from sensor_app.core.use_cases.sensor import CountSensors, ListSensors, CreateSe
 from sensor_app.core.use_cases.background_jobs import (
     GetBackgroundTaskResultsById,
     RetryBackgroundTaskById,
-    BackgroundMakeOneThousandSensors,
+    StartBackgroundTask,
 )
 
 
@@ -30,7 +30,7 @@ def create_fastapi_app(
         retry_background_task_by_id=RetryBackgroundTaskById(
             background_jobs_repo=background_jobs_repo
         ),
-        background_make_one_thousand_sensors=BackgroundMakeOneThousandSensors(
+        start_background_task=StartBackgroundTask(
             background_jobs_repo=background_jobs_repo
         ),
     )
@@ -43,7 +43,7 @@ def app_factory(
     create_sensor: CreateSensor,
     get_background_task_result_by_id: GetBackgroundTaskResultsById,
     retry_background_task_by_id: RetryBackgroundTaskById,
-    background_make_one_thousand_sensors: BackgroundMakeOneThousandSensors,
+    start_background_task: StartBackgroundTask,
 ) -> FastAPI:
     # TODO pass configuration from WebServerSettings to FastAPI app
     app = FastAPI()
@@ -59,7 +59,7 @@ def app_factory(
         )
         return results
 
-    @app.get("/background_task_results/{task_id}")
+    @app.get("/background_task_results/{task_id}", response_model=AsyncResult)
     async def use_get_background_task_results(task_id: UUID):
         return await get_background_task_result_by_id(str(task_id))
 
@@ -77,6 +77,6 @@ def app_factory(
 
     @app.post("/make_one_thousand_sensors", response_model=AsyncResult)
     async def use_background_make_one_thousand_sensors():
-        return await background_make_one_thousand_sensors()
+        return await start_background_task("make_one_thousand_sensors")
 
     return app

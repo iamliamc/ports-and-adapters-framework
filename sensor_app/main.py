@@ -6,9 +6,8 @@ from sensor_app import settings
 import sensor_app.adapters.secondary.persistence_sql as ps
 import sensor_app.adapters.secondary.background_jobs_celery as bjc
 from sensor_app.adapters.primary.web_server.fast_api_app import create_fastapi_app
-from sensor_app.adapters.secondary.background_jobs_celery.background_jobs_repo import (
+from sensor_app.adapters.primary.background_job_server.celery_app import (
     create_celery_app,
-    BackgroundJobsRepository,
 )
 
 
@@ -19,7 +18,7 @@ def serve():
             app = create_fastapi_app(
                 web_server_settings=app_settings.web_server,
                 background_jobs_repo=bjc.CeleryBackgroundJobRepo(
-                    app_settings.background_jobs
+                    app_settings.background_jobs, background_worker=background_worker
                 ),
                 sensor_repo=ps.AsyncpgSensorRepository(
                     app_settings.database.connection
