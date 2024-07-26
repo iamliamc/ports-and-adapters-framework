@@ -17,6 +17,7 @@ class RunningSettings:
         self.local_development = local_development
         self.debug = debug
 
+
 class BackgroundJobsSettings:
     def __init__(
         self,
@@ -25,13 +26,13 @@ class BackgroundJobsSettings:
         backend: str,
         task_always_eager: bool,
         task_eager_propagates: bool,
-        admin_dashboard_user: str = '',
-        admin_dashboard_user_password: str = '',
+        admin_dashboard_user: str = "",
+        admin_dashboard_user_password: str = "",
         result_backend: Optional[str] = None,
         cache_backend: Optional[str] = None,
         broker_connection_retry_on_startup: bool = True,
         task_track_started: bool = True,
-        task_send_sent_event: bool = True
+        task_send_sent_event: bool = True,
     ):
         self.name = name
         self.broker = broker
@@ -45,6 +46,7 @@ class BackgroundJobsSettings:
         self.broker_connection_retry_on_startup = broker_connection_retry_on_startup
         self.task_track_started = task_track_started
         self.task_send_sent_event = task_send_sent_event
+
 
 class ConfigSettings:
     def __init__(
@@ -85,7 +87,9 @@ class Settings:
         self.config = ConfigSettings(**settings.get("config", {}))
         self.database = DatabaseSettings(**settings.get("database", {}))
         self.web_server = WebServerSettings(**settings.get("web_server", {}))
-        self.background_jobs = BackgroundJobsSettings(**settings.get("background_jobs", {}))
+        self.background_jobs = BackgroundJobsSettings(
+            **settings.get("background_jobs", {})
+        )
 
 
 def load(path):

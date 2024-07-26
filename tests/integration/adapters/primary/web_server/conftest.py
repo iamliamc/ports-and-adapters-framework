@@ -19,6 +19,7 @@ def test_app(conftest_settings, test_sensor_repo):
         sensor_repo=test_sensor_repo,
     )
 
+
 @pytest.fixture
 def test_client(test_app):
     return TestClient(test_app)

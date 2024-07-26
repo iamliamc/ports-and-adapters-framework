@@ -6,12 +6,14 @@ from sensor_app.core.domain.entities import Sensor
 
 logger = logging.getLogger()
 
+
 class CountSensors(UseCase):
     def __init__(self, sensor_repo: SensorRepository):
         self.sensor_repo = sensor_repo
 
     async def __call__(self) -> int:
         return await self.sensor_repo.count_sensors()
+
 
 class ListSensors(UseCase):
     def __init__(self, sensor_repo: SensorRepository):
@@ -28,6 +30,7 @@ class CreateSensor(UseCase):
     async def __call__(self, sensor: Sensor) -> Sensor:
         return await self.sensor_repo.create_sensor(sensor)
 
+
 class MakeOneThousandSensors(UseCase):
     def __init__(self, sensor_repo: SensorRepository):
         self.sensor_repo = sensor_repo
@@ -35,6 +38,10 @@ class MakeOneThousandSensors(UseCase):
     async def __call__(self, count: int = 100000) -> List[Sensor]:
         sensors = []
         for i in range(0, count):
-            sensors.append(await self.sensor_repo.create_sensor(Sensor(name=f"Sensor {i}", value=i)))
-            
+            sensors.append(
+                await self.sensor_repo.create_sensor(
+                    Sensor(name=f"Sensor {i}", value=i)
+                )
+            )
+
         return sensors

@@ -1,4 +1,4 @@
-import asyncpg # type: ignore
+import asyncpg  # type: ignore
 from typing import List, Optional
 from sensor_app.core.domain.entities import Sensor
 from sensor_app.core.ports.secondary import SensorRepository
@@ -10,8 +10,8 @@ class AsyncpgSensorRepository(SensorRepository):
 
     async def _get_connection(self) -> asyncpg.Connection:
         return await asyncpg.connect(self.database_url)
-    
-    async def count_sensors(self) -> int: 
+
+    async def count_sensors(self) -> int:
         conn = await self._get_connection()
         async with conn.transaction():
             row = await conn.fetchrow(
