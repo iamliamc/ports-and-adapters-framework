@@ -1,5 +1,4 @@
 import pytest
-import logging
 from fastapi.testclient import TestClient
 from sensor_app.adapters.primary.web_server.fast_api_app import create_fastapi_app
 from sensor_app.adapters.primary.background_job_server.celery_app import (
@@ -12,11 +11,6 @@ from sensor_app.adapters.secondary.background_jobs_celery.background_jobs_repo i
     CeleryBackgroundJobRepo,
 )
 
-
-def pytest_configure(config):
-    logging.getLogger('celery').setLevel(logging.INFO)
-    logging.getLogger('kombu').setLevel(logging.INFO)
-    logging.getLogger('celery.utils.functional').setLevel(logging.WARNING)
 
 @pytest.fixture
 def sensor_repo(conftest_settings):
@@ -50,11 +44,3 @@ def test_background_jobs_worker(conftest_settings, sensor_repo):
 @pytest.fixture
 def test_client(test_app):
     return TestClient(test_app)
-
-
-@pytest.fixture(scope="session")
-def test_celery_worker(test_background_jobs_worker):
-    # Create a Celery worker instance
-    with test_background_jobs_worker.pool.acquire(block=True) as pool:
-        yield
-        pool.release()

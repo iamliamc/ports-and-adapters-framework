@@ -62,7 +62,6 @@ def create_celery_app(
             result_extended=True,
         )
 
-        # TODO this is starting to feel like a "primary adapter" because we are driving application logic
         configure_usecases_as_tasks(
             celery_app=_celery_app,
             make_one_thousand_sensors=MakeOneThousandSensors(sensor_repo=sensor_repo),

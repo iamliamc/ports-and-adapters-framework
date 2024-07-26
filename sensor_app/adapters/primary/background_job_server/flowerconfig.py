@@ -8,7 +8,7 @@ max_tasks = 1000
 
 if app_settings.running.run_background_jobs:
     logging = "DEBUG"
-else: 
+else:
     logging = "INFO"
 
 # Web server address: '0.0.0.0'
