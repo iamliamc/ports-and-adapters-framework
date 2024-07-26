@@ -1,11 +1,13 @@
 from typing import List
 from fastapi import FastAPI, Depends
+from uuid import UUID
 from sensor_app.settings import WebServerSettings
-from sensor_app.core.domain.entities import Sensor, RetryBackgroundTask
+from sensor_app.core.domain.entities import Sensor
 from sensor_app.core.domain.results import AsyncResult
 from sensor_app.core.ports.secondary import SensorRepository
 from sensor_app.core.ports.secondary import BackgroundJobsRepository
-from sensor_app.core.use_cases.sensor import CountSensors, ListSensors, CreateSensor, RetryBackgroundTaskById, BackgroundMakeOneThousandSensors
+from sensor_app.core.use_cases.sensor import CountSensors, ListSensors, CreateSensor
+from sensor_app.core.use_cases.background_jobs import GetBackgroundTaskResultsById, RetryBackgroundTaskById, BackgroundMakeOneThousandSensors
 
 def create_fastapi_app(
     web_server_settings: WebServerSettings, 
@@ -17,6 +19,7 @@ def create_fastapi_app(
         count_sensors=CountSensors(sensor_repo=sensor_repo),
         list_sensors=ListSensors(sensor_repo=sensor_repo),
         create_sensor=CreateSensor(sensor_repo=sensor_repo),
+        get_background_task_result_by_id=GetBackgroundTaskResultsById(background_jobs_repo=background_jobs_repo),
         retry_background_task_by_id=RetryBackgroundTaskById(background_jobs_repo=background_jobs_repo),
         background_make_one_thousand_sensors=BackgroundMakeOneThousandSensors(background_jobs_repo=background_jobs_repo)
     )
@@ -27,6 +30,7 @@ def app_factory(
     count_sensors: CountSensors,
     list_sensors: ListSensors,
     create_sensor: CreateSensor,
+    get_background_task_result_by_id: GetBackgroundTaskResultsById,
     retry_background_task_by_id: RetryBackgroundTaskById,
     background_make_one_thousand_sensors: BackgroundMakeOneThousandSensors,
 
@@ -39,10 +43,13 @@ def app_factory(
         return "Hello Sensor App"
     
     @app.post("/retry_background_task", response_model=AsyncResult)
-    async def use_retry_background_task_by_id(retry_background_task: RetryBackgroundTask):
+    async def use_retry_background_task_by_id(retry_background_task: AsyncResult):
         results = await retry_background_task_by_id(task_id=retry_background_task.task_id)
-        import pdb; pdb.set_trace()
         return results
+    
+    @app.get('/background_task_results/{task_id}')
+    async def use_get_background_task_results(task_id: UUID):
+        return await get_background_task_result_by_id(str(task_id))
     
     @app.get("/sensor_count")
     async def use_count_sensors():

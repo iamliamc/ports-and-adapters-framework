@@ -9,6 +9,9 @@ class BackgroundJobsRepository(Protocol):
     def retry_task(self, task_id: str) -> AsyncResult:
         pass
 
+    def get_task_results(self, task_id: str) -> AsyncResult:
+        pass
+
 class SensorRepository(Protocol):
     async def count_sensors(self) -> int:
         pass
