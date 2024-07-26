@@ -1,6 +1,6 @@
 # adapters.py
 import asyncio
-from typing import Any, List
+from typing import Callable, TypeVar, Any, List
 from sensor_app.core.domain.entities import Sensor
 from celery import Celery
 from sensor_app.core.ports.secondary import BackgroundJobsRepository
@@ -14,15 +14,26 @@ import celery.result as cr
 _celery_app = None
 
 
-def configure_usecases_as_tasks(celery_app, sensor_repo) -> None:
-    @celery_app.task(name="make_one_thousand_sensors")
-    def make_one_thousand_sensors() -> List[Sensor]:
-        loop = asyncio.get_event_loop()
-        results = loop.run_until_complete(
-            MakeOneThousandSensors(sensor_repo=sensor_repo)()
-        )
-        return results
+T = TypeVar('T')
 
+def run_async_task(async_func: Callable[..., T], *args, **kwargs) -> T:
+    loop = asyncio.get_event_loop()
+    result = loop.run_until_complete(async_func(*args, **kwargs))
+    return result
+
+def create_celery_task(celery_app: Celery, task_name: str, async_func: Callable[..., List]) -> None:
+    @celery_app.task(name=task_name)
+    def celery_task(*args, **kwargs) -> List:
+        return run_async_task(async_func, *args, **kwargs)
+
+
+def configure_usecases_as_tasks(celery_app: Celery, make_one_thousand_sensors: MakeOneThousandSensors) -> None:
+    create_celery_task(
+        celery_app,
+        task_name="make_one_thousand_sensors",
+        async_func=make_one_thousand_sensors
+    )
+    return None
 
 def create_celery_app(
     background_job_settings: BackgroundJobsSettings, sensor_repo: SensorRepository
@@ -46,15 +57,15 @@ def create_celery_app(
             result_extended=True,
         )
 
-        # Add logging?
+        # TODO this is starting to feel like a "primary adapter" because we are driving application logic
         configure_usecases_as_tasks(
             celery_app=_celery_app,
-            sensor_repo=sensor_repo,
+            make_one_thousand_sensors=MakeOneThousandSensors(sensor_repo=sensor_repo),
         )
 
     return _celery_app
 
-
+# TODO this is still a secondary repo for fetching background jobs and sending tasks up...
 class CeleryBackgroundJobRepo(BackgroundJobsRepository):
     def __init__(self, background_job_settings: BackgroundJobsSettings):
         if _celery_app is None:
@@ -64,7 +75,8 @@ class CeleryBackgroundJobRepo(BackgroundJobsRepository):
         self.celery_app = _celery_app
 
     def send_task(self, task_name: str, *args, **kwargs) -> AsyncResult:
-        results = self.celery_app.send_task(task_name, args=args, kwargs=kwargs)
+        task = self.celery_app.tasks[task_name]
+        results = task.apply_async(args=args, kwargs=kwargs)
         return results
 
     def retry_task(self, task_id: str) -> AsyncResult:
