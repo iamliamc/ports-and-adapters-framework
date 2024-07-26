@@ -64,5 +64,7 @@ logger.addHandler(ch)
 logger.setLevel(app_settings.config.log_level)
 
 settings.log_config(app_settings, logger)
-background_worker = start_background_worker()
-app = serve()
+
+if __name__ == "sensor_app.main":
+    background_worker = start_background_worker()
+    app = serve()

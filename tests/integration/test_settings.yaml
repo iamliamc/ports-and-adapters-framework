@@ -8,3 +8,21 @@ web_server:
   port: 8080
   host: 0.0.0.0 
   swagger_relative_path: "/"
+
+background_jobs:
+  name: "sensor_app"
+  broker: "memory://"  # Use in-memory broker for testing
+  backend: 
+  task_always_eager: true  # Ensure tasks run eagerly for testing
+  task_eager_propagates: true  # Ensure exceptions are propagated
+  admin_dashboard_user: "user"
+  admin_dashboard_user_password: "password"
+
+running:
+  run_web_server: false
+  run_background_jobs: false
+
+  # prod/test  -> local_development: false
+  local_development: false
+  # prod/test  -> debug: false
+  debug: false

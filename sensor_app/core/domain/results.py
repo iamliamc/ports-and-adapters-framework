@@ -32,9 +32,6 @@ class AsyncResult(BaseModel):
             # If the result is a list of BaseModels, skip serialization
             return result
         else:
-            import pdb
-
-            pdb.set_trace()
             try:
                 # Attempt to serialize `result` directly
                 json.dumps(result)

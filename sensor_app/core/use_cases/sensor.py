@@ -35,7 +35,7 @@ class MakeOneThousandSensors(UseCase):
     def __init__(self, sensor_repo: SensorRepository):
         self.sensor_repo = sensor_repo
 
-    async def __call__(self, count: int = 100000) -> List[Sensor]:
+    async def __call__(self, count: int = 10) -> List[Sensor]:
         sensors = []
         for i in range(0, count):
             sensors.append(

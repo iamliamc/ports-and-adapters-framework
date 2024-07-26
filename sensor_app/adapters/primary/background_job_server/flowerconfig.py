@@ -5,7 +5,11 @@ from sensor_app.main import app_settings
 max_tasks = 1000
 
 # Enable debug logging: 'DEBUG'
-logging = "DEBUG"
+
+if app_settings.running.run_background_jobs:
+    logging = "DEBUG"
+else: 
+    logging = "INFO"
 
 # Web server address: '0.0.0.0'
 address = "0.0.0.0"

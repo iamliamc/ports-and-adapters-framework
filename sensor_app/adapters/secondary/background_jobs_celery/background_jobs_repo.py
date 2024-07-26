@@ -18,6 +18,7 @@ class CeleryBackgroundJobRepo(BackgroundJobsRepository):
 
     def send_task(self, task_name: str, *args, **kwargs) -> AsyncResult:
         task = self.celery_app.tasks[task_name]
+
         results = task.apply_async(args=args, kwargs=kwargs)
         return AsyncResult(
             id=results.id,

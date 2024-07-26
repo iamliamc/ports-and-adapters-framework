@@ -1,12 +1,19 @@
 import os
 import yaml
-from sensor_app.settings import DatabaseSettings, WebServerSettings
+from sensor_app.settings import (
+    DatabaseSettings,
+    WebServerSettings,
+    BackgroundJobsSettings,
+    RunningSettings,
+)
 
 
 class Settings:
     def __init__(self, settings):
         self.database = DatabaseSettings(**settings.get("database", {}))
         self.web_server_settings = WebServerSettings(**settings.get("web_server"))
+        self.background_jobs = BackgroundJobsSettings(**settings.get("background_jobs"))
+        self.running = RunningSettings(**settings.get("running"))
 
 
 def load(path=os.path.join("tests", "integration", "test_settings.yaml")):

@@ -41,7 +41,9 @@ def configure_usecases_as_tasks(
 def create_celery_app(
     background_job_settings: BackgroundJobsSettings, sensor_repo: SensorRepository
 ) -> Celery:
+    # TODO this poses an issue with tests...
     global _celery_app
+
     if _celery_app is None:
         _celery_app = Celery(
             background_job_settings.name,
