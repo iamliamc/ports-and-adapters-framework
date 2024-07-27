@@ -12,6 +12,7 @@ from sensor_app.core.use_cases.background_jobs import (
     RetryBackgroundTaskById,
     StartBackgroundTask,
 )
+from fastapi.middleware.cors import CORSMiddleware
 
 
 def create_fastapi_app(
@@ -47,6 +48,20 @@ def app_factory(
 ) -> FastAPI:
     # TODO pass configuration from WebServerSettings to FastAPI app
     app = FastAPI()
+
+    # Define the origins that should be allowed to make requests to this app
+    origins = [
+        "http://localhost:5173",  # This if flexible-frontend
+        "http://localhost:8000",  # Add other origins as needed
+    ]
+
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=origins,  # Allow specific origins
+        allow_credentials=True,
+        allow_methods=["*"],  # Allow all HTTP methods
+        allow_headers=["*"],  # Allow all headers
+    )
 
     @app.get("/")
     def root() -> str:
