@@ -1,18 +1,19 @@
 from typing import List
-from fastapi import FastAPI, Depends
+from fastapi import FastAPI, HTTPException
 from uuid import UUID
 from sensor_app.settings import WebServerSettings
 from sensor_app.core.domain.entities import Sensor
 from sensor_app.core.domain.results import AsyncResult
 from sensor_app.core.ports.secondary import SensorRepository
 from sensor_app.core.ports.secondary import BackgroundJobsRepository
-from sensor_app.core.use_cases.sensor import CountSensors, ListSensors, CreateSensor
+from sensor_app.core.use_cases.sensor import CountSensors, GetSensor, ListSensors, CreateSensor
 from sensor_app.core.use_cases.background_jobs import (
     GetBackgroundTaskResultsById,
     RetryBackgroundTaskById,
     StartBackgroundTask,
 )
 from fastapi.middleware.cors import CORSMiddleware
+from random import randint
 
 
 def create_fastapi_app(
@@ -23,6 +24,7 @@ def create_fastapi_app(
     return app_factory(
         web_server_settings,
         count_sensors=CountSensors(sensor_repo=sensor_repo),
+        get_sensor=GetSensor(sensor_repo=sensor_repo),
         list_sensors=ListSensors(sensor_repo=sensor_repo),
         create_sensor=CreateSensor(sensor_repo=sensor_repo),
         get_background_task_result_by_id=GetBackgroundTaskResultsById(
@@ -40,6 +42,7 @@ def create_fastapi_app(
 def app_factory(
     web_server_settings: WebServerSettings,
     count_sensors: CountSensors,
+    get_sensor: GetSensor,
     list_sensors: ListSensors,
     create_sensor: CreateSensor,
     get_background_task_result_by_id: GetBackgroundTaskResultsById,
@@ -65,6 +68,13 @@ def app_factory(
 
     @app.get("/")
     def root() -> str:
+        try:
+            raise ValueError("Disaster")
+        except ValueError as e:
+            # Raise an HTTPException with status code 500 and an error message
+            number = randint(0, 100)
+            if number >= 50:
+                raise HTTPException(status_code=500, detail=f"{e} {number}")
         return "Hello Sensor App"
 
     @app.post("/retry_background_task", response_model=AsyncResult)
@@ -85,6 +95,13 @@ def app_factory(
     @app.get("/sensors", response_model=List[Sensor])
     async def use_list_sensors():
         return await list_sensors()
+    
+    @app.get("/sensor/{id}", response_model=Sensor)
+    async def use_get_sensor(id: int) -> Sensor:
+        sensor = await get_sensor(id)
+        if sensor is None:
+            raise HTTPException(status_code=404, detail=f"Sensor with {id} not found")
+        return sensor
 
     @app.post("/sensor", response_model=Sensor)
     async def use_create_sensor(sensor: Sensor):
