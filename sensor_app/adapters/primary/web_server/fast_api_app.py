@@ -75,7 +75,7 @@ def app_factory(
             number = randint(0, 100)
             if number >= 50:
                 raise HTTPException(status_code=500, detail=f"{e} {number}")
-        return "Hello Sensor App"
+        return "Sensor App"
 
     @app.post("/retry_background_task", response_model=AsyncResult)
     async def use_retry_background_task_by_id(retry_background_task: AsyncResult):
