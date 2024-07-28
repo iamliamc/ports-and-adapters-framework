@@ -24,6 +24,12 @@ To get into the database manually:
 `docker exec -it CONTAINER_ID psql -U dev_user -d dev_db`
 `docker-compose logs postgres_dev`
 
+Helpful alias
+```
+alias dev_db_exec='docker exec -it $(docker ps --filter "name=ports-and-adapters-framework-postgres_dev-1" -q) psql -U dev_user -d dev_db'
+alias test_db_exec='docker exec -it $(docker ps --filter "name=ports-and-adapters-framework-postgres_test-1" -q) psql -U test_user -d test_db'
+```
+
 Basic postgres inspection: 
 `\l` list databases
 `\c dev_db` connect to the dev_db

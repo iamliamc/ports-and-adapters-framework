@@ -84,6 +84,9 @@ def app_factory(
         )
         return results
 
+    # Technically we could hit flower API if so desired
+    # https://flower.readthedocs.io/en/latest/api.html#get--api-task-info-(.*)
+    # http://localhost:5555/api/task/info/f2b8b54e-fde2-4b78-aa1a-b6076dd5e31a
     @app.get("/background_task_results/{task_id}", response_model=AsyncResult)
     async def use_get_background_task_results(task_id: UUID):
         return await get_background_task_result_by_id(str(task_id))
