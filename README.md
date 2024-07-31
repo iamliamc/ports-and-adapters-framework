@@ -78,3 +78,7 @@ http://localhost:8000/docs
 
 On the other hand, Celery is a good choice for more complex applications that need to handle a large volume of tasks, or require more advanced scheduling features. Celery’s distributed architecture allows it to handle large volumes of tasks, and its Celery Beat scheduling functionality makes it a powerful tool for scheduling periodic tasks.
 ```
+
+To test the docker build:
+`docker build -t ports-and-adapters-framework .`
+`docker run -p 7777:8000 ports-and-adapters-framework`
