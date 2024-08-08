@@ -14,12 +14,14 @@ class CountSensors(UseCase):
     async def __call__(self) -> int:
         return await self.sensor_repo.count_sensors()
 
+
 class GetSensor(UseCase):
     def __init__(self, sensor_repo: SensorRepository):
         self.sensor_repo = sensor_repo
 
     async def __call__(self, sensor_id: int) -> Optional[Sensor]:
         return await self.sensor_repo.get_sensor(sensor_id)
+
 
 class ListSensors(UseCase):
     def __init__(self, sensor_repo: SensorRepository):

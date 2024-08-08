@@ -35,7 +35,7 @@ background_job_settings = app_settings.background_jobs
 if (
     background_job_settings.admin_dashboard_user
     and background_job_settings.admin_dashboard_user_password
-): 
+):
     basic_auth = [
         f"{background_job_settings.admin_dashboard_user}:{background_job_settings.admin_dashboard_user_password}"
     ]

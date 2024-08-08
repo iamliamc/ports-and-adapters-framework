@@ -4,6 +4,9 @@
 database:
   connection: "postgresql://test_user:test_password@localhost:5432/test_db"
 
+no_sql_database:
+  connection: "mongodb://test_user:test_password@localhost:27017/test_db"
+
 web_server:
   port: 8080
   host: 0.0.0.0 

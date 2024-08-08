@@ -1,8 +1,8 @@
 from pydantic import BaseModel
-from typing import Optional
+from typing import Optional, Union
 
 
 class Sensor(BaseModel):
-    id: Optional[int] = None
+    id: Optional[Union[int, str]] = None
     name: str
     value: float

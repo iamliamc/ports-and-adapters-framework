@@ -6,7 +6,12 @@ from sensor_app.core.domain.entities import Sensor
 from sensor_app.core.domain.results import AsyncResult
 from sensor_app.core.ports.secondary import SensorRepository
 from sensor_app.core.ports.secondary import BackgroundJobsRepository
-from sensor_app.core.use_cases.sensor import CountSensors, GetSensor, ListSensors, CreateSensor
+from sensor_app.core.use_cases.sensor import (
+    CountSensors,
+    GetSensor,
+    ListSensors,
+    CreateSensor,
+)
 from sensor_app.core.use_cases.background_jobs import (
     GetBackgroundTaskResultsById,
     RetryBackgroundTaskById,
@@ -98,7 +103,7 @@ def app_factory(
     @app.get("/sensors", response_model=List[Sensor])
     async def use_list_sensors():
         return await list_sensors()
-    
+
     @app.get("/sensor/{id}", response_model=Sensor)
     async def use_get_sensor(id: int) -> Sensor:
         sensor = await get_sensor(id)

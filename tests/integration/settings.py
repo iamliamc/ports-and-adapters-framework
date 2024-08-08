@@ -2,6 +2,7 @@ import os
 import yaml
 from sensor_app.settings import (
     DatabaseSettings,
+    NoSqlDatabaseSettings,
     WebServerSettings,
     BackgroundJobsSettings,
     RunningSettings,
@@ -11,6 +12,9 @@ from sensor_app.settings import (
 class Settings:
     def __init__(self, settings):
         self.database = DatabaseSettings(**settings.get("database", {}))
+        self.no_sql_database = NoSqlDatabaseSettings(
+            **settings.get("no_sql_database", {})
+        )
         self.web_server_settings = WebServerSettings(**settings.get("web_server"))
         self.background_jobs = BackgroundJobsSettings(**settings.get("background_jobs"))
         self.running = RunningSettings(**settings.get("running"))

@@ -2,11 +2,13 @@ import logging
 import pytest
 import pytest_asyncio
 import asyncpg
+import asyncio
 from alembic.config import Config
 from alembic import command
 from alembic.script import ScriptDirectory
 from alembic.runtime import migration
 from sqlalchemy import create_engine
+from motor.motor_asyncio import AsyncIOMotorClient
 
 from tests.integration import settings
 
@@ -37,8 +39,20 @@ def database_url(test_logger):
     return db_url
 
 
+@pytest.fixture(scope="session")
+def no_sql_database_url(test_logger):
+    # Load environment variables from .env file
+    db_url = test_settings.no_sql_database.connection
+    if not db_url:
+        raise ValueError(
+            "No test_settings.no_sql_database.connection set for pytest configuration need to update tests/test_settings.yaml"
+        )
+    test_logger.debug(db_url)
+    return db_url
+
+
 async def get_table_names():
-        # List all table names in the database
+    # List all table names in the database
     conn = await asyncpg.connect(test_settings.database.connection)
 
     tables = await conn.fetch(
@@ -49,6 +63,7 @@ async def get_table_names():
     """
     )
     return tables
+
 
 async def truncate_all_tables():
     conn = await asyncpg.connect(test_settings.database.connection)
@@ -121,3 +136,30 @@ async def clean_db():
     yield
 
     await truncate_all_tables()
+
+
+@pytest_asyncio.fixture(scope="session")
+async def no_sql_db_client(no_sql_database_url):
+    """Fixture to create and close an async database client."""
+    client = AsyncIOMotorClient(no_sql_database_url)
+    client.get_io_loop = asyncio.get_event_loop
+    yield client
+
+    client.close()
+
+
+async def truncate_all_mongodb_collections(no_sql_db_client):
+    database = no_sql_db_client.get_default_database()  # get db based on db name in URL
+    # Cleanup after each test
+    collections = await database.list_collection_names()
+    for collection in collections:
+        await database[collection].delete_many({})
+
+
+@pytest_asyncio.fixture(scope="function", autouse=True)
+async def clean_no_sql_db(no_sql_db_client):
+    await truncate_all_mongodb_collections(no_sql_db_client=no_sql_db_client)
+
+    yield
+
+    await truncate_all_mongodb_collections(no_sql_db_client=no_sql_db_client)

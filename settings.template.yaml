@@ -13,7 +13,7 @@ config:
 
 database:
   # backoffice db connection
-  connection: "postgres://postgres:password@localhost/back_office"
+  connection: "postgres://postgres:password@localhost/sensor_app"
 
 web_server:
   port: 8080
