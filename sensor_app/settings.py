@@ -64,6 +64,12 @@ class DatabaseSettings:
             raise ValueError("Database connection string is required.")
         self.connection = connection
 
+class NoSqlDatabaseSettings:
+    def __init__(self, connection=None):
+        if None in [connection]:
+            raise ValueError("NoSql Database connection string is required.")
+        self.connection = connection
+
 
 class WebServerSettings:
     def __init__(
@@ -86,6 +92,7 @@ class Settings:
         self.running = RunningSettings(**settings.get("running", {}))
         self.config = ConfigSettings(**settings.get("config", {}))
         self.database = DatabaseSettings(**settings.get("database", {}))
+        self.no_sql_database = NoSqlDatabaseSettings(**settings.get("no_sql_database", {}))
         self.web_server = WebServerSettings(**settings.get("web_server", {}))
         self.background_jobs = BackgroundJobsSettings(
             **settings.get("background_jobs", {})

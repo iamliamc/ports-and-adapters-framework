@@ -15,9 +15,10 @@ Running databases
 
 ```
 (venv) liamconsidine@CQQ27KJ4GL ports-and-adapters-framework % docker ps
-CONTAINER ID   IMAGE         COMMAND                  CREATED          STATUS          PORTS                    NAMES
-0313c9bd6269   postgres:13   "docker-entrypoint.s…"   14 seconds ago   Up 13 seconds   0.0.0.0:5433->5432/tcp   ports-and-adapters-framework-postgres_test-1
-0e97aa9f3fa1   postgres:13   "docker-entrypoint.s…"   14 seconds ago   Up 13 seconds   0.0.0.0:5432->5432/tcp   ports-and-adapters-framework-postgres_dev-1
+CONTAINER ID   IMAGE          COMMAND                  CREATED              STATUS              PORTS                      NAMES
+268fd24362f4   mongo:latest   "docker-entrypoint.s…"   About a minute ago   Up About a minute   0.0.0.0:27017->27017/tcp   ports-and-adapters-framework-mongodb-1
+1c810913ab04   redis:6        "docker-entrypoint.s…"   About a minute ago   Up About a minute   0.0.0.0:6379->6379/tcp     ports-and-adapters-framework-redis-1
+5f7dff5ac287   postgres:13    "docker-entrypoint.s…"   About a minute ago   Up About a minute   0.0.0.0:5432->5432/tcp     ports-and-adapters-framework-postgres-1
 ```
 
 To get into the database manually:

@@ -37,20 +37,27 @@ def database_url(test_logger):
     return db_url
 
 
+async def get_table_names():
+        # List all table names in the database
+    conn = await asyncpg.connect(test_settings.database.connection)
+
+    tables = await conn.fetch(
+        """
+        SELECT table_name
+        FROM information_schema.tables
+        WHERE table_schema = 'public'
+    """
+    )
+    return tables
+
 async def truncate_all_tables():
-    # List all table names in the database
     conn = await asyncpg.connect(test_settings.database.connection)
     try:
-        tables = await conn.fetch(
-            """
-            SELECT table_name
-            FROM information_schema.tables
-            WHERE table_schema = 'public'
-        """
-        )
-
+        tables = await get_table_names()
         table_names = [table["table_name"] for table in tables]
-        table_names.remove("alembic_version")
+
+        if "alembic_version" in table_names:
+            table_names.remove("alembic_version")
 
         # Generate TRUNCATE TABLE commands for all data tables
         if table_names:
@@ -73,7 +80,7 @@ async def db_connection(database_url):
 
 
 @pytest_asyncio.fixture(scope="session", autouse=True)
-def run_migrations(database_url, test_logger):
+async def run_migrations(database_url, test_logger):
     """Run Alembic migrations before any tests are run."""
     alembic_cfg = Config("alembic.ini")  # Path to your alembic configuration file
     alembic_cfg.set_main_option("sqlalchemy.url", database_url)
@@ -91,12 +98,14 @@ def run_migrations(database_url, test_logger):
 
     # Get the latest revision (HEAD) from the script directory
     head_revision = script_directory.get_current_head()
-
     if current_revision != head_revision:
         test_logger.info(
             f"Running migrations from {current_revision} to {head_revision}"
         )
         try:
+            table_names = await get_table_names()
+            if "alemibic_version" not in table_names:
+                command.stamp(alembic_cfg, "base")
             command.upgrade(alembic_cfg, "head")
         except Exception as e:
             test_logger.error(f"Failed attempt to run migrations: {e}")

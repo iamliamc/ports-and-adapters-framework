@@ -1,3 +1,4 @@
+import os
 from logging.config import fileConfig
 import logging
 
@@ -48,7 +49,10 @@ logger.info(f"Using {database_url}")
 if not database_url:
     raise ValueError("No database url in settings.database.connection set for Alembic configuration see settings.yaml")
 
-config.set_main_option('sqlalchemy.url', database_url)
+is_pytest = os.environ.get('PYTEST_CURRENT_TEST') is not None
+
+if not is_pytest:
+    config.set_main_option('sqlalchemy.url', database_url)
 
 def run_migrations_offline() -> None:
     """Run migrations in 'offline' mode.

@@ -15,6 +15,9 @@ config:
 database:
   connection: "postgresql://dev_user:dev_password@localhost:5432/dev_db"
 
+no_sql_database:
+  connection: "mongodb://mongo_user:mongo_password@localhost:27017"
+
 web_server:
   port: 8080
   host: 0.0.0.0 
