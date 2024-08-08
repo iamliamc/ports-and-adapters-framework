@@ -22,13 +22,15 @@ CONTAINER ID   IMAGE          COMMAND                  CREATED              STAT
 ```
 
 To get into the database manually:
+
 `docker exec -it CONTAINER_ID psql -U dev_user -d dev_db`
+
 `docker-compose logs postgres_dev`
 
 Helpful alias
 ```
-alias dev_db_exec='docker exec -it $(docker ps --filter "name=ports-and-adapters-framework-postgres_dev-1" -q) psql -U dev_user -d dev_db'
-alias test_db_exec='docker exec -it $(docker ps --filter "name=ports-and-adapters-framework-postgres_test-1" -q) psql -U test_user -d test_db'
+alias dev_db_exec='docker exec -it $(docker ps --filter "name=ports-and-adapters-framework-postgres" -q) psql -U dev_user -d dev_db'
+alias test_db_exec='docker exec -it $(docker ps --filter "name=ports-and-adapters-framework-postgres" -q) psql -U test_user -d test_db'
 ```
 
 Basic postgres inspection: 
@@ -50,6 +52,7 @@ Run the application
 Some type checking:
 
 `mypy sensor_app`
+
 ```Success: no issues found in 20 source files```
 
 ### Swagger Documentation: 
@@ -81,5 +84,7 @@ On the other hand, Celery is a good choice for more complex applications that ne
 ```
 
 To test the docker build:
+
 `docker build -t ports-and-adapters-framework .`
+
 `docker run -p 7777:8000 ports-and-adapters-framework`
