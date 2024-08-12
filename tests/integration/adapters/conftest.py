@@ -4,25 +4,11 @@ from sensor_app.adapters.primary.web_server.fast_api_app import create_fastapi_a
 from sensor_app.adapters.primary.background_job_server.celery_app import (
     create_celery_app,
 )
-from sensor_app.adapters.secondary.persistence_sql.sensor_repo import (
-    AsyncpgSensorRepository,
-)
-from sensor_app.adapters.secondary.persistence_mongodb.sensor_repo import (
-    MongoDBSensorRepository,
-)
 from sensor_app.adapters.secondary.background_jobs_celery.background_jobs_repo import (
     CeleryBackgroundJobRepo,
 )
 
 
-@pytest.fixture
-def sensor_repo(conftest_settings):
-    return AsyncpgSensorRepository(conftest_settings.database.connection)
-
-
-@pytest.fixture
-def no_sql_sensor_repo(conftest_settings):
-    return MongoDBSensorRepository(conftest_settings.no_sql_database.connection)
 
 
 @pytest.fixture

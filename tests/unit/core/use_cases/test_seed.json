@@ -1,0 +1,182 @@
+{
+    "global_metadata": [],
+    "installations": [
+        {
+            "id": "1",
+            "uuid": "fc22a9d3-b7b3-47cd-9e5e-89e3d8e16068",
+            "name": "Met Pak Pro - Foremast",
+            "installation_date": "2023-02-02",
+            "removal_date": null,
+            "effective_date": "2024-08-12",
+            "end_date": null,
+            "location": {
+                "id": "1",
+                "name": "Foremast",
+                "abbreviation": "fm"
+            },
+            "group": {
+                "id": "1",
+                "name": "Meteorological"
+            },
+            "device": {
+                "calibration_file": "/MET-Meterology_Calibration_Documents/GillMetpak/Foremast/",
+                "filename_prefix": "mpp_fm",
+                "installation_date": "2023-02-02",
+                "removal_date": null,
+                "notes": "",
+                "components": [
+                    {
+                        "name": "Anemometer",
+                        "serial_number": "20100008",
+                        "calibration_date": "2021-11-22",
+                        "installation_date": "2023-02-02"
+                    },
+                    {
+                        "id": "2",
+                        "name": "Bracket",
+                        "serial_number": "20100024",
+                        "calibration_date": "2021-11-22",
+                        "installation_date": "2023-02-02"
+                    },
+                    {
+                        "id": "3",
+                        "name": "Hydroclip",
+                        "serial_number": "20269221",
+                        "calibration_date": "2021-11-22",
+                        "installation_date": "2023-02-02"
+                    }
+                ],
+                "device_type": {
+                    "id": "1",
+                    "label": "Gill MetPak Pro Weather Station",
+                    "alternative_label": "Gill MetPak Pro",
+                    "abbreviation": "mpp",
+                    "custom_device_reference": "metpakpro",
+                    "definition": "A multiparameter weather station for measuring various meteorological parameters in marine environments. These include wind speed and direction, temperature, relative humidity, barometric pressure and dew point. The base station combines a Gill WindSonic ultrasonic wind speed and direction sensor, a barometric pressure sensor and Totronic Hygroclip temperature and humidity probe. MetPak Pro includes Gill's MetSet configuration software and MetView data logging and visualisation software. It is also supplied with mast mounting kits. Up to four additional external devices can be connected, such as a Pt100 temperature sensor and tipping bucket rain gauge, plus two analogue sensors. Alternatively, the base station itself can be configured with an optional rain gauge and various remote wind sensors. It can measure wind speeds from 0-60 m/s between 0-359 degrees at +/- 2 percent accuracy in speed and +/- 3 degrees accuracy in direction (at 12 m/s). It measures air temperature from -50 to +100 degC at +/- 0.1 degC accuracy and 0.1 degC resolution.",
+                    "instrument_type": "meteorological packages",
+                    "example_output": "2023-12-02T00:00:00.878301Z, Q,132,001.14,1006.4,077.6,+029.9,+025.6,,+99998.0006,+99998.0004,0000.000,+11.7,00, 4F",
+                    "filename": "{cruise_id}_mpp_{location}_{num}-%Y-%m-%d.txt",
+                    "file_header": "Timestamp,NodeLetter,WindDir_deg,WindSpd_m/s,AirPres_hPa,Humidity_%, AirTemp_C, DewPoint, PRT, AnI/P1, AnI/P2, DigI/P, SupplyVoltage, SupplyCode, CheckSum",
+                    "identifier": "SDN:L22::TOOL1559",
+                    "manual_link": "",
+                    "parser": "{timestamp:S},{:1W}{NodeLetter:w},{WindDir:od},{WindSpd:og},{AirPres:og},{Humidity:og},{AirTemp:og},{DewPoint:og},,{:og},{:og},{:og},{SupplyVoltage:og},{SupplyCode:ow},{:1W}{CheckSum:x}",
+                    "permit_parameters": [
+                        "wind speed",
+                        "wind direction",
+                        "air temperature",
+                        "air pressure",
+                        "humidity",
+                        "dew point"
+                    ],
+                    "uri": "https://vocab.nerc.ac.uk/collection/L22/current/TOOL1559/",
+                    "component_types": [
+                        {
+                            "name": "anemometer",
+                            "label": "Anemometer"
+                        },
+                        {
+                            "name": "bracket",
+                            "label": "Mounting Bracket"
+                        },
+                        {
+                            "name": "hydroclip",
+                            "label": "Hydroclip"
+                        }
+                    ],
+                    "measurement_types": [
+                        {
+                            "accuracy": "3 deg @ 12 m/s",
+                            "alternative_label": "Wind Dir",
+                            "description": "",
+                            "header_label": "WindDir_deg",
+                            "label": "Relative Wind Direction",
+                            "instrument_range": [
+                                0,
+                                359
+                            ],
+                            "resolution": 1,
+                            "type": "measured",
+                            "units": "deg",
+                            "units_long": "Degrees",
+                            "uri": ""
+                        },
+                        {
+                            "accuracy": "2% @ 12 m/s",
+                            "alternative_label": "Wind Speed",
+                            "description": "",
+                            "header_label": "WindSpd_m/s",
+                            "label": "Relative Wind Speed",
+                            "instrument_range": [],
+                            "resolution": 0.01,
+                            "type": "measured",
+                            "units": "m/s",
+                            "units_long": "meters per second",
+                            "uri": ""
+                        },
+                        {
+                            "accuracy": 0.5,
+                            "alternative_label": "Air Press",
+                            "description": "",
+                            "label": "Air Pressure",
+                            "header_label": "AirPres_hPa",
+                            "instrument_range": [
+                                600,
+                                1100
+                            ],
+                            "resolution": 0.1,
+                            "type": "measured",
+                            "units": "hPa",
+                            "units_long": "",
+                            "uri": ""
+                        },
+                        {
+                            "accuracy": "0.8% @ 23 C",
+                            "alternative_label": "Humidity",
+                            "description": "",
+                            "header_label": "Humidity_%",
+                            "label": "Humidity",
+                            "instrument_range": [],
+                            "resolution": 0.1,
+                            "type": "measured",
+                            "units": "%",
+                            "units_long": "percent relative humidity",
+                            "uri": ""
+                        },
+                        {
+                            "accuracy": "0.1",
+                            "alternative_label": "Air Temp",
+                            "description": "",
+                            "header_label": "AirTemp_C",
+                            "label": "Air Temperature",
+                            "instrument_range": [
+                                50,
+                                100
+                            ],
+                            "resolution": 0.1,
+                            "type": "measured",
+                            "units": "deg C",
+                            "units_long": "Degrees Celcius",
+                            "uri": ""
+                        },
+                        {
+                            "accuracy": "0.15 @ 23 C",
+                            "alternative_label": "Dew Point",
+                            "description": "",
+                            "header_label": "DewPoint",
+                            "label": "humidity",
+                            "instrument_range": [
+                                50,
+                                100
+                            ],
+                            "resolution": 0.1,
+                            "type": "derived",
+                            "units": "deg C",
+                            "units_long": "Degrees Celcius",
+                            "uri": ""
+                        }
+                    ]
+                }
+            }
+        }
+    ]
+}
