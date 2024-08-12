@@ -1,5 +1,5 @@
 from typing import Protocol, List, Optional
-from sensor_app.core.domain.entities import Sensor
+from sensor_app.core.domain.entities import Sensor, DeviceType, Device
 from sensor_app.core.domain.results import AsyncResult
 
 
@@ -35,4 +35,13 @@ class SensorRepository(Protocol):
 
 class SeedRepository(Protocol):
     async def initalize_database(self, seed_filepath: str) -> None:
+        pass
+
+
+class DeviceTypeRepository(Protocol):
+    async def create(self, device_type: DeviceType) -> DeviceType:
+        pass
+
+class DeviceRepository(Protocol):
+    async def create(self, device: Device) -> Device:
         pass

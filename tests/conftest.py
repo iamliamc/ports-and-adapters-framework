@@ -9,7 +9,21 @@ from alembic.script import ScriptDirectory
 from alembic.runtime import migration
 from sqlalchemy import create_engine
 from motor.motor_asyncio import AsyncIOMotorClient
-
+from sensor_app.adapters.secondary.persistence_sql.sensor_repo import (
+    AsyncpgSensorRepository,
+)
+from sensor_app.adapters.secondary.persistence_mongodb.sensor_repo import (
+    MongoDBSensorRepository,
+)
+from sensor_app.adapters.secondary.persistence_mongodb.seed_repo import (
+    MongoDBSeedRepository,
+)
+from sensor_app.adapters.secondary.persistence_mongodb.device_type_repo import (
+    MongoDBDeviceTypeRepository,
+)
+from sensor_app.adapters.secondary.persistence_mongodb.device_repo import (
+    MongoDBDeviceRepository,
+)
 from tests.integration import settings
 
 test_settings = settings.load()
@@ -163,3 +177,25 @@ async def clean_no_sql_db(no_sql_db_client):
     yield
 
     await truncate_all_mongodb_collections(no_sql_db_client=no_sql_db_client)
+
+
+@pytest.fixture
+def sensor_repo(conftest_settings):
+    return AsyncpgSensorRepository(conftest_settings.database.connection)
+
+
+@pytest.fixture
+def no_sql_sensor_repo(conftest_settings):
+    return MongoDBSensorRepository(conftest_settings.no_sql_database.connection)
+
+@pytest.fixture
+def no_sql_seed_repo(conftest_settings):
+    return MongoDBSeedRepository(conftest_settings.no_sql_database.connection)
+
+@pytest.fixture
+def no_sql_device_type_repo(conftest_settings):
+    return MongoDBDeviceTypeRepository(conftest_settings.no_sql_database.connection)
+
+@pytest.fixture
+def no_sql_device_repo(conftest_settings):
+    return MongoDBDeviceRepository(conftest_settings.no_sql_database.connection)

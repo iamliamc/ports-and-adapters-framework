@@ -26,28 +26,24 @@
                 "notes": "",
                 "components": [
                     {
-                        "id": "1",
                         "name": "Anemometer",
                         "serial_number": "20100008",
                         "calibration_date": "2021-11-22",
-                        "installation_date": "2023-02-02",
-                        "component_type_id": "1"
+                        "installation_date": "2023-02-02"
                     },
                     {
                         "id": "2",
                         "name": "Bracket",
                         "serial_number": "20100024",
                         "calibration_date": "2021-11-22",
-                        "installation_date": "2023-02-02",
-                        "component_type_id": "2"
+                        "installation_date": "2023-02-02"
                     },
                     {
                         "id": "3",
                         "name": "Hydroclip",
                         "serial_number": "20269221",
                         "calibration_date": "2021-11-22",
-                        "installation_date": "2023-02-02",
-                        "component_type_id": "3"
+                        "installation_date": "2023-02-02"
                     }
                 ],
                 "device_type": {
@@ -73,7 +69,21 @@
                         "dew point"
                     ],
                     "uri": "https://vocab.nerc.ac.uk/collection/L22/current/TOOL1559/",
-                    "device_type_measurements": [
+                    "component_types": [
+                        {
+                            "name": "anemometer",
+                            "label": "Anemometer"
+                        },
+                        {
+                            "name": "bracket",
+                            "label": "Mounting Bracket"
+                        },
+                        {
+                            "name": "hydroclip",
+                            "label": "Hydroclip"
+                        }
+                    ],
+                    "measurement_types": [
                         {
                             "accuracy": "3 deg @ 12 m/s",
                             "alternative_label": "Wind Dir",
