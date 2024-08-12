@@ -10,6 +10,9 @@ from sensor_app.adapters.secondary.persistence_sql.sensor_repo import (
 from sensor_app.adapters.secondary.persistence_mongodb.sensor_repo import (
     MongoDBSensorRepository,
 )
+from sensor_app.adapters.secondary.persistence_mongodb.seed_repo import (
+    MongoDBSeedRepository,
+)
 from sensor_app.adapters.secondary.background_jobs_celery.background_jobs_repo import (
     CeleryBackgroundJobRepo,
 )
@@ -23,6 +26,10 @@ def sensor_repo(conftest_settings):
 @pytest.fixture
 def no_sql_sensor_repo(conftest_settings):
     return MongoDBSensorRepository(conftest_settings.no_sql_database.connection)
+
+@pytest.fixture
+def no_sql_seed_repo(conftest_settings):
+    return MongoDBSeedRepository(conftest_settings.no_sql_database.connection)
 
 
 @pytest.fixture

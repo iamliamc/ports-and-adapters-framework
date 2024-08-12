@@ -32,3 +32,7 @@ class SensorRepository(Protocol):
 
     async def list_sensors(self) -> List[Sensor]:
         pass
+
+class SeedRepository(Protocol):
+    async def initalize_database(self, seed_filepath: str) -> None:
+        pass
