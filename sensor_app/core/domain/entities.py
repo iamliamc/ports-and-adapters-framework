@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 from enum import Enum
 from pydantic import UUID4, BaseModel, HttpUrl, Json, Field, model_validator
 from typing import Optional, Tuple, Union, List, Any
@@ -6,6 +6,10 @@ from uuid import uuid4, UUID
 
 def generate_uuid_str():
     return str(uuid4())
+
+def get_current_utc_time():
+    return datetime.now(timezone.utc)
+
 
 class BaseModel(BaseModel):
     id: Optional[Any] = Field(default=None, alias="_id")
@@ -24,59 +28,40 @@ class Sensor(BaseModel):
     name: str
     value: float
 
-class Location(BaseModel):
-    id: Optional[Union[int, str]]
-    name: str
-    abbreviation: str
+# class Installation(BaseModel):
+#     id: Optional[Union[int, str]] = None
+#     uuid: Optional[uuid4] = Field(default_factory=generate_uuid_str)
+#     name: str
+#     installation_date: datetime
+#     removal_date: Optional[datetime] = None
+#     location: Location
+#     group: Optional['Group']
+#     device: Device
+#     created_at: Optional[Union[datetime]] = None
+#     updated_at: Optional[Union[datetime]] = None
 
-class Group(BaseModel):
-    id: str
-    name: str
+# class Component(BaseModel):
+#     id: Optional[Union[int, str]] = None
+#     uuid: str = Field(default_factory=generate_uuid_str)
+#     name: str
+#     serial_number: str
+#     device_id: Optional[Union[int, str, uuid4]] = None
+#     calibration_date: Optional[datetime] = None
+#     installation_date: Optional[datetime] = None
+#     component_type_id: Optional[Union[int, str]] = None
 
-class Component(BaseModel):
-    id: Optional[Union[int, str]] = None
-    name: str
-    serial_number: str
-    calibration_date: Optional[datetime] = None
-    installation_date: Optional[datetime] = None
-    component_type_id: Optional[Union[int, str]] = None
-
-
-class Device(BaseModel):
-    id: Optional[Union[int, str]] = None
-    uuid: str = Field(default_factory=generate_uuid_str)
-    device_type_id: Optional[Union[int, str]] = None
-    calibration_file: str
-    filename_prefix: str
-    notes: Optional[str] = None
-    components: List[Component]
-    status: Optional['DeviceStatus'] = None
-    device_type: 'DeviceType'  # Forward reference
-    created_at: Optional[Union[datetime]] = None
-    updated_at: Optional[Union[datetime]] = None
-
-class Installation(BaseModel):
-    id: str
-    uuid: UUID4
-    name: str
-    installation_date: datetime
-    removal_date: Optional[datetime] = None
-    effective_date: datetime
-    end_date: Optional[datetime] = None
-    location: Location
-    group: Group
-    device: Device
-
-class UserRole(str, Enum):
-    admin = "admin"
-    technician = "technician"
-
-class User(BaseModel):
-    id: Optional[Union[int, str]]
-    role: UserRole
-    email: str
-    created_at: datetime
-    updated_at: datetime
+# class Device(BaseModel):
+#     id: Optional[Union[int, str]] = None
+#     uuid: str = Field(default_factory=generate_uuid_str)
+#     device_type_id: Optional[Union[int, str]] = None
+#     calibration_file: str
+#     filename_prefix: str
+#     notes: Optional[str] = None
+#     components: List[Component]
+#     status: Optional['DeviceStatus'] = None
+#     device_type: 'DeviceType'  # Forward reference
+#     created_at: Optional[Union[datetime]] = None
+#     updated_at: Optional[Union[datetime]] = None
 
 class GlobalMetadata(BaseModel):
     id: Optional[int] = None
@@ -103,13 +88,14 @@ class GlobalMetadata(BaseModel):
     publisher_url: Optional[str] = None
     creator_url: Optional[str] = None
 
+
 class Location(BaseModel):
-    id: Optional[Union[int, str]]
-    description: str
-    abbreviated_description: str
-    notes: Optional[str]
-    created_at: datetime
-    updated_at: datetime
+    id: Optional[Union[int, str]] = None
+    name: str
+    abbreviation: str
+    notes: Optional[str] = None
+    created_at: Optional[datetime] = None
+    updated_at: Optional[datetime] = None
 
 class DeviceStatus(str, Enum):
     onboard = "onboard"
@@ -121,24 +107,95 @@ class DeviceStatus(str, Enum):
     no_calibration_docs = "no_calibration_docs"
 
 class DeviceState(BaseModel):
-    id: Optional[Union[int, str]]
-    identifier: UUID4
-    serial_number: UUID4
-    device_type_id: Optional[Union[int, str]]
-    status: DeviceStatus
-    start_date: datetime
-    end_date: Optional[datetime]
-    notes: Optional[str]
-
-class DeviceInstallation(BaseModel):
-    id: Optional[Union[int, str]]
-    device_identifier: UUID4
-    installation_id: Optional[Union[int, str]]
+    id: Optional[Union[int, str]] = None
+    device_id: Optional[uuid4] = None
+    device_type_id: Optional[Union[int, str, uuid4]] = None
+    calibration_file: str
     filename_prefix: str
-    installed_date: datetime
+    notes: Optional[str] = None
+    components: List['ComponentState']
+    status: Optional['DeviceStatus'] = None
+    device_type: Optional['DeviceType'] = None  
+    effective_date: Optional[datetime] = Field(default_factory=get_current_utc_time)
+    expiration_date: Optional[datetime] = None
+    created_at: Optional[Union[datetime]] = None
+    updated_at: Optional[Union[datetime]] = None
+
+class ComponentStatus(str, Enum):
+    onboard = "onboard"
+    installed = "installed"
+    backup_ctd = "backup_ctd"
+    sent_for_calibration = "sent_for_calibration"
+    defective = "defective"
+    lost = "lost"
+    no_calibration_docs = "no_calibration_docs"
+
+class ComponentState(BaseModel):
+    id: Optional[Union[int, str]] = None
+    component_id: Optional[Union[int, str, uuid4]] = Field(default_factory=generate_uuid_str)
+    name: str
+    serial_number: str
+    device_id: Optional[Union[int, str, uuid4]] = None
+    calibration_date: Optional[datetime] = None
+    installation_date: Optional[datetime] = None
     removal_date: Optional[datetime] = None
+    status: ComponentStatus
+    component_type_id: Optional[Union[int, str]] = None
+    ship_to_calibration_by: Optional[datetime] = None
+    effecitve_date: Optional[datetime] = None
+    expiration_date: Optional[datetime] = None
+
+class Group(BaseModel):
+    id: Optional[Union[int, str]] = None
+    uuid: uuid4 = Field(default_factory=generate_uuid_str)
+    name: str
+    abbreviation: Optional[str]
+    created_at: Optional[datetime] = Field(default_factory=get_current_utc_time)
+    updated_at: Optional[datetime] = Field(default_factory=get_current_utc_time)
+    notes: Optional[str] = None
+
+# class GroupInstallations(BaseModel):
+#     id: Optional[Union[int, str]]
+#     uuid: uuid4 = Field(default_factory=generate_uuid_str)
+#     label: str
+#     abbreviation: Optional[str]
+#     installation_timelines: List['InstallationTimeline']
+#     group: Group
+#     notes: Optional[str]
+
+class InstallationTimeline(BaseModel):
+    id: Optional[Union[int, str]] = None
+    installation_id: Optional[uuid4] = Field(default_factory=generate_uuid_str)
+    name: str
+    installation_date: datetime
+    removal_date: Optional[datetime] = None
+    location: Location
+    group: Group
+    device_states: List[DeviceState]
+    created_at: Optional[Union[datetime]] = None
+    updated_at: Optional[Union[datetime]] = None
+
+class UserRole(str, Enum):
+    admin = "admin"
+    technician = "technician"
+
+class User(BaseModel):
+    id: Optional[Union[int, str]]
+    uuid: str = Field(default_factory=generate_uuid_str)
+    role: UserRole
+    email: str
     created_at: datetime
     updated_at: datetime
+
+# class DeviceInstallation(BaseModel):
+#     id: Optional[Union[int, str]]
+#     device_identifier: UUID4
+#     installation_id: Optional[Union[int, str]]
+#     filename_prefix: str
+#     installed_date: datetime
+#     removal_date: Optional[datetime] = None
+#     created_at: datetime
+#     updated_at: datetime
 
 class MeasurementType(BaseModel):
     id: Optional[Union[int, str]] = None
@@ -184,26 +241,10 @@ class DeviceType(BaseModel):
     created_at: Optional[Union[datetime]] = None
     updated_at: Optional[Union[datetime]] = None
 
-class ComponentState(BaseModel):
-    id: Optional[Union[int, str]]
-    identifier: UUID4
-    serial_number: UUID4
-    device_identifier: UUID4
-    calibration_date: Optional[datetime]
-    calibration_due: Optional[datetime]
-    ship_to_calibration_by: Optional[datetime]
-    installation_date: Optional[datetime]
-    removal_date: Optional[datetime] = None
-    start_date: datetime
-    end_date: Optional[datetime]
-    status: str
-    component_type_id: Optional[Union[int, str]]
 
-class InstallationGroup(BaseModel):
-    id: Optional[Union[int, str]]
-    label: str
-    created_at: datetime
-    updated_at: datetime
-    notes: Optional[str]
+# Device.model_rebuild()
+# Installation.model_rebuild()
 
-Device.model_rebuild()
+DeviceState.model_rebuild()
+# GroupInstallations.model_rebuild()
+InstallationTimeline.model_rebuild()

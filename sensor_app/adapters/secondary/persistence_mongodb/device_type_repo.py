@@ -1,10 +1,10 @@
 from typing import List, Optional
 from motor.motor_asyncio import AsyncIOMotorClient
 from bson import ObjectId
-from sensor_app.core.domain.entities import Sensor, Installation, DeviceType
+from sensor_app.core.domain.entities import Sensor, DeviceType
 from sensor_app.core.ports.secondary import DeviceTypeRepository
 import json
-from datetime import datetime
+from datetime import datetime, timezone
 
 class MongoDBDeviceTypeRepository(DeviceTypeRepository):
     def __init__(self, connection_string: str):
@@ -20,7 +20,7 @@ class MongoDBDeviceTypeRepository(DeviceTypeRepository):
         device_type_dict.pop('id', None)
 
         # Set created_at and updated_at fields
-        current_time = datetime.utcnow()
+        current_time = datetime.now(timezone.utc)
         device_type_dict["created_at"] = current_time
         device_type_dict["updated_at"] = current_time
 

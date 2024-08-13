@@ -1,5 +1,5 @@
 from typing import Protocol, List, Optional
-from sensor_app.core.domain.entities import Sensor, DeviceType, Device
+from sensor_app.core.domain.entities import Sensor, DeviceType, DeviceState, InstallationTimeline
 from sensor_app.core.domain.results import AsyncResult
 
 
@@ -43,5 +43,9 @@ class DeviceTypeRepository(Protocol):
         pass
 
 class DeviceRepository(Protocol):
-    async def create(self, device: Device) -> Device:
+    async def create(self, device: DeviceState) -> DeviceState:
+        pass
+
+class InstallationRepository(Protocol):
+    async def create_installation_with_device_states(self, device: InstallationTimeline) -> InstallationTimeline:
         pass
