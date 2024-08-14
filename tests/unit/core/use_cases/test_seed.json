@@ -15,37 +15,8 @@
                 "name": "Meteorological",
                 "abbreviation": "met"
             },
-            "device_states": [
-                {
-                    "calibration_file": "/MET-Meterology_Calibration_Documents/GillMetpak/Foremast/",
-                    "filename_prefix": "mpp_fm",
-                    "effective_date": "2023-02-02",
-                    "expiration_date": null,
-                    "notes": "",
-                    "components": [
-                        {
-                            "name": "Anemometer",
-                            "serial_number": "20100008",
-                            "calibration_date": "2021-11-22",
-                            "installation_date": "2023-02-02",
-                            "status": "installed"
-                        },
-                        {
-                            "name": "Bracket",
-                            "serial_number": "20100024",
-                            "calibration_date": "2021-11-22",
-                            "installation_date": "2023-02-02",
-                            "status": "installed"
-                        },
-                        {
-                            "name": "Hydroclip",
-                            "serial_number": "20269221",
-                            "calibration_date": "2021-11-22",
-                            "installation_date": "2023-02-02",
-                            "status": "installed"
-                        }
-                    ],
-                    "device_type": {
+            "device": {
+                "device_type": {
                         "id": "1",
                         "label": "Gill MetPak Pro Weather Station",
                         "alternative_label": "Gill MetPak Pro",
@@ -58,6 +29,8 @@
                         "file_header": "Timestamp,NodeLetter,WindDir_deg,WindSpd_m/s,AirPres_hPa,Humidity_%, AirTemp_C, DewPoint, PRT, AnI/P1, AnI/P2, DigI/P, SupplyVoltage, SupplyCode, CheckSum",
                         "identifier": "SDN:L22::TOOL1559",
                         "manual_link": "",
+                        "calibration_file": "/MET-Meterology_Calibration_Documents/GillMetpak/Foremast/",
+                        "filename_prefix": "mpp_fm",
                         "parser": "{timestamp:S},{:1W}{NodeLetter:w},{WindDir:od},{WindSpd:og},{AirPres:og},{Humidity:og},{AirTemp:og},{DewPoint:og},,{:og},{:og},{:og},{SupplyVoltage:og},{SupplyCode:ow},{:1W}{CheckSum:x}",
                         "permit_parameters": [
                             "wind speed",
@@ -174,9 +147,39 @@
                                 "uri": ""
                             }
                         ]
+                    },
+                "device_states": [
+                    {
+                        "effective_date": "2023-02-02",
+                        "expiration_date": null,
+                        "status": "installed",
+                        "notes": "",
+                        "components": [
+                            {
+                                "name": "Anemometer",
+                                "serial_number": "20100008",
+                                "calibration_date": "2021-11-22",
+                                "installation_date": "2023-02-02",
+                                "status": "installed"
+                            },
+                            {
+                                "name": "Bracket",
+                                "serial_number": "20100024",
+                                "calibration_date": "2021-11-22",
+                                "installation_date": "2023-02-02",
+                                "status": "installed"
+                            },
+                            {
+                                "name": "Hydroclip",
+                                "serial_number": "20269221",
+                                "calibration_date": "2021-11-22",
+                                "installation_date": "2023-02-02",
+                                "status": "installed"
+                            }
+                        ]
                     }
-                }
-            ]
+                ]
+            }
         }
     ]
 }

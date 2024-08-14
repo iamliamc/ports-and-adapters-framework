@@ -23,3 +23,5 @@ MongoDB pattern: data that is accessed together should be stored together...
 
 Patterns
 
+https://www.mongodb.com/blog/post/building-with-patterns-the-schema-versioning-pattern
+

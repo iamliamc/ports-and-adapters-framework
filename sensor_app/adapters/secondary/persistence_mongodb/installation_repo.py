@@ -13,7 +13,7 @@ class MongoDBInstallationRepository(InstallationRepository):
         self.collection = self.db.installations
 
 
-    async def create(self, installation: InstallationTimeline) -> InstallationTimeline:
+    async def create_installation_with_device_states(self, installation: InstallationTimeline) -> InstallationTimeline:
 
         # Convert Pydantic model to dictionary
         installation_dict = installation.model_dump(by_alias=True)
